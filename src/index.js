@@ -11,6 +11,8 @@ export const useUnsavedChangesDialog = ({
     navigation,
     isFocused,
     hasUnsavedChanges,
+    onDialogOpen,
+    onContinueEditing,
     onDiscardChanges
 }) => {
     const [isUnsavedChangesDialogVisible, setIsUnsavedChangesDialogVisible] = useState(false);
@@ -23,6 +25,7 @@ export const useUnsavedChangesDialog = ({
 
         Keyboard.dismiss();
         setIsUnsavedChangesDialogVisible(true);
+        onDialogOpen && onDialogOpen();
     };
 
     const closeUnsavedChangesDialog = () => {
@@ -44,11 +47,12 @@ export const useUnsavedChangesDialog = ({
         isFocused
     ]);
 
-    const onContinueEditing = () => {
+    const onContinueEditingClick = () => {
+        onContinueEditing && onContinueEditing();
         closeUnsavedChangesDialog();
     };
 
-    const onDiscardUnsavedChanges = () => {
+    const onDiscardChangesClick = () => {
         onDiscardChanges && onDiscardChanges();
         closeUnsavedChangesDialog();
         navigation.goBack();
@@ -58,7 +62,7 @@ export const useUnsavedChangesDialog = ({
         <Portal>
             <Dialog
                 visible={isUnsavedChangesDialogVisible}
-                onDismiss={onContinueEditing}
+                onDismiss={onContinueEditingClick}
             >
                 <Dialog.Content>
                     <Paragraph>
@@ -69,12 +73,12 @@ export const useUnsavedChangesDialog = ({
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button
-                        onPress={onContinueEditing}
+                        onPress={onContinueEditingClick}
                     >
                         No
                     </Button>
                     <Button
-                        onPress={onDiscardUnsavedChanges}
+                        onPress={onDiscardChangesClick}
                     >
                         Yes
                     </Button>
