@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BackHandler, Keyboard } from 'react-native';
+import { di } from 'react-magnetic-di';
 import {
     Dialog,
     Button,
@@ -7,17 +8,23 @@ import {
     Portal
 } from 'react-native-paper';
 
+const DialogContent = Dialog.Content;
+const DialogActions = Dialog.Actions;
+
 export const useUnsavedChangesDialog = ({
     navigation,
     isFocused,
     hasUnsavedChanges,
-    onDialogOpen,
-    onContinueEditing,
-    onDiscardChanges
+    onDialogOpen = null,
+    onContinueEditing = null,
+    onDiscardChanges = null
 }) => {
-    const [isUnsavedChangesDialogVisible, setIsUnsavedChangesDialogVisible] = useState(false);
+    di(Button, Dialog, DialogActions, DialogContent, Paragraph, Portal, useEffect, useState);
 
-    const openUnsavedChangesDialog = () => {
+    const [isUnsavedChangesDialogVisible, setIsUnsavedChangesDialogVisible] = useState(false);
+    const openUnsavedChangesDialog = useRef();
+
+    openUnsavedChangesDialog.current = () => {
         if (!hasUnsavedChanges) {
             navigation.goBack();
             return;
@@ -25,7 +32,7 @@ export const useUnsavedChangesDialog = ({
 
         Keyboard.dismiss();
         setIsUnsavedChangesDialogVisible(true);
-        onDialogOpen && onDialogOpen();
+        onDialogOpen?.();
     };
 
     const closeUnsavedChangesDialog = () => {
@@ -36,24 +43,21 @@ export const useUnsavedChangesDialog = ({
         const handler = isFocused && BackHandler.addEventListener(
             'hardwareBackPress',
             () => {
-                openUnsavedChangesDialog();
+                openUnsavedChangesDialog.current();
                 return true;
             }
         );
 
         return () => handler && handler.remove();
-    }, [
-        openUnsavedChangesDialog,
-        isFocused
-    ]);
+    }, [isFocused]);
 
     const onContinueEditingClick = () => {
-        onContinueEditing && onContinueEditing();
+        onContinueEditing?.();
         closeUnsavedChangesDialog();
     };
 
     const onDiscardChangesClick = () => {
-        onDiscardChanges && onDiscardChanges();
+        onDiscardChanges?.();
         closeUnsavedChangesDialog();
         navigation.goBack();
     };
@@ -64,14 +68,14 @@ export const useUnsavedChangesDialog = ({
                 visible={isUnsavedChangesDialogVisible}
                 onDismiss={onContinueEditingClick}
             >
-                <Dialog.Content>
+                <DialogContent>
                     <Paragraph>
                         Closing the screen will discard any unsaved changes.
                         {' '}
                         Do you want to continue and discard any unsaved changes?
                     </Paragraph>
-                </Dialog.Content>
-                <Dialog.Actions>
+                </DialogContent>
+                <DialogActions>
                     <Button
                         onPress={onContinueEditingClick}
                     >
@@ -82,13 +86,13 @@ export const useUnsavedChangesDialog = ({
                     >
                         Yes
                     </Button>
-                </Dialog.Actions>
+                </DialogActions>
             </Dialog>
         </Portal>
     );
 
     return {
         renderUnsavedChangesDialog,
-        openUnsavedChangesDialog
+        openUnsavedChangesDialog: openUnsavedChangesDialog.current
     };
 };

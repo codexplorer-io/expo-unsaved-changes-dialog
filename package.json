@@ -4,7 +4,10 @@
   "main": "src/index.js",
   "peerDependencies": {
     "react": "*",
+    "react-dom": "*",
     "react-native": "*",
-    "react-native-paper": "*"
+    "react-native-paper": "*",
+    "@codexporer.io/react-hooks": "*",
+    "@codexporer.io/react-test-utils": "*"
   }
 }
