@@ -33,12 +33,12 @@ describe('useUnsavedChangesDialog', () => {
     };
 
     const defaultDeps = [
-        injectable(Button, createMockComponent('Button', { hasChildren: true })),
-        injectable(Dialog, createMockComponent('Dialog', { hasChildren: true })),
-        injectable(DialogContent, createMockComponent('DialogContent', { hasChildren: true })),
-        injectable(DialogActions, createMockComponent('DialogActions', { hasChildren: true })),
-        injectable(Paragraph, createMockComponent('Paragraph', { hasChildren: true })),
-        injectable(Portal, createMockComponent('Portal', { hasChildren: true }))
+        injectable(Button, createMockComponent('Button')),
+        injectable(Dialog, createMockComponent('Dialog')),
+        injectable(DialogContent, createMockComponent('DialogContent')),
+        injectable(DialogActions, createMockComponent('DialogActions')),
+        injectable(Paragraph, createMockComponent('Paragraph')),
+        injectable(Portal, createMockComponent('Portal'))
     ];
 
     beforeEach(() => {
