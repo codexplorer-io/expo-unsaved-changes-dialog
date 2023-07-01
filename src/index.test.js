@@ -24,7 +24,7 @@ const DialogActions = Dialog.Actions;
 describe('useUnsavedChangesDialog', () => {
     const removeBackHandler = jest.fn();
     const defaultProps = {
-        navigation: { goBack: jest.fn() },
+        goBack: jest.fn(),
         isFocused: true,
         hasUnsavedChanges: true,
         onDialogOpen: jest.fn(),
@@ -62,7 +62,7 @@ describe('useUnsavedChangesDialog', () => {
 
             // eslint-disable-next-line lodash/prefer-lodash-method
             expect(renderUnsavedChangesDialog().find('Dialog').props().visible).toBe(false);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(Keyboard.dismiss).not.toHaveBeenCalled();
             expect(defaultProps.onDialogOpen).not.toHaveBeenCalled();
 
@@ -72,7 +72,7 @@ describe('useUnsavedChangesDialog', () => {
 
             // eslint-disable-next-line lodash/prefer-lodash-method
             expect(renderUnsavedChangesDialog().find('Dialog').props().visible).toBe(true);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(Keyboard.dismiss).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDialogOpen).toHaveBeenCalledTimes(1);
         });
@@ -96,7 +96,7 @@ describe('useUnsavedChangesDialog', () => {
 
             // eslint-disable-next-line lodash/prefer-lodash-method
             expect(renderUnsavedChangesDialog().find('Dialog').props().visible).toBe(true);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(Keyboard.dismiss).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDialogOpen).not.toHaveBeenCalled();
         });
@@ -120,7 +120,7 @@ describe('useUnsavedChangesDialog', () => {
 
             // eslint-disable-next-line lodash/prefer-lodash-method
             expect(renderUnsavedChangesDialog().find('Dialog').props().visible).toBe(false);
-            expect(defaultProps.navigation.goBack).toHaveBeenCalledTimes(1);
+            expect(defaultProps.goBack).toHaveBeenCalledTimes(1);
             expect(Keyboard.dismiss).not.toHaveBeenCalled();
             expect(defaultProps.onDialogOpen).not.toHaveBeenCalled();
         });
@@ -214,7 +214,7 @@ describe('useUnsavedChangesDialog', () => {
 
             // eslint-disable-next-line lodash/prefer-lodash-method
             expect(renderUnsavedChangesDialog().find('Dialog').props().visible).toBe(true);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(Keyboard.dismiss).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDialogOpen).toHaveBeenCalledTimes(1);
         });
@@ -254,7 +254,7 @@ describe('useUnsavedChangesDialog', () => {
             { deps: defaultDeps }
         );
 
-        it('should be closed without navigation when dialog is dismissed', () => {
+        it('should be closed without going back when dialog is dismissed', () => {
             const hookRunner = openUnsavedChangesDialog({});
             // eslint-disable-next-line lodash/prefer-lodash-method
             const dialog = renderUnsavedChangesDialog(hookRunner).find('Dialog');
@@ -270,12 +270,12 @@ describe('useUnsavedChangesDialog', () => {
                 // eslint-disable-next-line lodash/prefer-lodash-method
                 renderUnsavedChangesDialog(hookRunner).find('Dialog').props().visible
             ).toBe(false);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(defaultProps.onContinueEditing).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDiscardChanges).not.toHaveBeenCalled();
         });
 
-        it('should be should be closed without navigation and not call onContinueEditing callback when not passed', () => {
+        it('should be closed without going back and not call onContinueEditing callback when not passed', () => {
             const hookRunner = openUnsavedChangesDialog({ shouldOverrideContineEditing: true });
             // eslint-disable-next-line lodash/prefer-lodash-method
             const dialog = renderUnsavedChangesDialog(hookRunner).find('Dialog');
@@ -291,12 +291,12 @@ describe('useUnsavedChangesDialog', () => {
                 // eslint-disable-next-line lodash/prefer-lodash-method
                 renderUnsavedChangesDialog(hookRunner).find('Dialog').props().visible
             ).toBe(false);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(defaultProps.onContinueEditing).not.toHaveBeenCalled();
             expect(defaultProps.onDiscardChanges).not.toHaveBeenCalled();
         });
 
-        it('should be closed without navigation when cancel button is clicked', () => {
+        it('should be closed without going back when cancel button is clicked', () => {
             const hookRunner = openUnsavedChangesDialog({});
             // eslint-disable-next-line lodash/prefer-lodash-method
             const dialog = renderUnsavedChangesDialog(hookRunner).find('Dialog');
@@ -314,12 +314,12 @@ describe('useUnsavedChangesDialog', () => {
                 // eslint-disable-next-line lodash/prefer-lodash-method
                 renderUnsavedChangesDialog(hookRunner).find('Dialog').props().visible
             ).toBe(false);
-            expect(defaultProps.navigation.goBack).not.toHaveBeenCalled();
+            expect(defaultProps.goBack).not.toHaveBeenCalled();
             expect(defaultProps.onContinueEditing).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDiscardChanges).not.toHaveBeenCalled();
         });
 
-        it('should be closed with navigation when confirm button is clicked', () => {
+        it('should be closed and go back when confirm button is clicked', () => {
             const hookRunner = openUnsavedChangesDialog({});
             // eslint-disable-next-line lodash/prefer-lodash-method
             const dialog = renderUnsavedChangesDialog(hookRunner).find('Dialog');
@@ -337,12 +337,12 @@ describe('useUnsavedChangesDialog', () => {
                 // eslint-disable-next-line lodash/prefer-lodash-method
                 renderUnsavedChangesDialog(hookRunner).find('Dialog').props().visible
             ).toBe(false);
-            expect(defaultProps.navigation.goBack).toHaveBeenCalledTimes(1);
+            expect(defaultProps.goBack).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDiscardChanges).toHaveBeenCalledTimes(1);
             expect(defaultProps.onContinueEditing).not.toHaveBeenCalled();
         });
 
-        it('should be closed with navigation and not call onContinueEditing callback when not passed', () => {
+        it('should be closed and go back and not call onContinueEditing callback when not passed', () => {
             const hookRunner = openUnsavedChangesDialog({ shouldOverrideDiscardChanges: true });
             // eslint-disable-next-line lodash/prefer-lodash-method
             const dialog = renderUnsavedChangesDialog(hookRunner).find('Dialog');
@@ -360,7 +360,7 @@ describe('useUnsavedChangesDialog', () => {
                 // eslint-disable-next-line lodash/prefer-lodash-method
                 renderUnsavedChangesDialog(hookRunner).find('Dialog').props().visible
             ).toBe(false);
-            expect(defaultProps.navigation.goBack).toHaveBeenCalledTimes(1);
+            expect(defaultProps.goBack).toHaveBeenCalledTimes(1);
             expect(defaultProps.onDiscardChanges).not.toHaveBeenCalled();
             expect(defaultProps.onContinueEditing).not.toHaveBeenCalled();
         });

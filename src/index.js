@@ -12,7 +12,7 @@ const DialogContent = Dialog.Content;
 const DialogActions = Dialog.Actions;
 
 export const useUnsavedChangesDialog = ({
-    navigation,
+    goBack,
     isFocused,
     hasUnsavedChanges,
     onDialogOpen = null,
@@ -26,7 +26,7 @@ export const useUnsavedChangesDialog = ({
 
     openUnsavedChangesDialog.current = () => {
         if (!hasUnsavedChanges) {
-            navigation.goBack();
+            goBack();
             return;
         }
 
@@ -59,7 +59,7 @@ export const useUnsavedChangesDialog = ({
     const onDiscardChangesClick = () => {
         onDiscardChanges?.();
         closeUnsavedChangesDialog();
-        navigation.goBack();
+        goBack();
     };
 
     const renderUnsavedChangesDialog = () => (
