@@ -22,9 +22,14 @@ export const useUnsavedChangesDialog = ({
     di(Button, Dialog, DialogActions, DialogContent, Paragraph, Portal, useEffect, useState);
 
     const [isUnsavedChangesDialogVisible, setIsUnsavedChangesDialogVisible] = useState(false);
-    const openUnsavedChangesDialog = useRef();
+    const openUnsavedChangesDialogRef = useRef();
 
-    openUnsavedChangesDialog.current = () => {
+    const openUnsavedChangesDialogDependenciesRef = useRef();
+    openUnsavedChangesDialogDependenciesRef.current = { hasUnsavedChanges };
+
+    openUnsavedChangesDialogRef.current = () => {
+        const { hasUnsavedChanges } = openUnsavedChangesDialogDependenciesRef.current;
+
         if (!hasUnsavedChanges) {
             goBack();
             return;
@@ -43,7 +48,7 @@ export const useUnsavedChangesDialog = ({
         const handler = isFocused && BackHandler.addEventListener(
             'hardwareBackPress',
             () => {
-                openUnsavedChangesDialog.current();
+                openUnsavedChangesDialogRef.current();
                 return true;
             }
         );
@@ -93,6 +98,6 @@ export const useUnsavedChangesDialog = ({
 
     return {
         renderUnsavedChangesDialog,
-        openUnsavedChangesDialog: openUnsavedChangesDialog.current
+        openUnsavedChangesDialog: openUnsavedChangesDialogRef.current
     };
 };
