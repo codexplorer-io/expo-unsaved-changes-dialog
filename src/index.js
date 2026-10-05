@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BackHandler, Keyboard } from 'react-native';
-import { di } from 'react-magnetic-di';
+import {
+    BackHandler,
+    Keyboard,
+    StyleSheet,
+    Text
+} from 'react-native';
 import {
     Dialog,
-    Button,
-    Paragraph,
-    Portal
-} from 'react-native-paper';
-
-const DialogContent = Dialog.Content;
-const DialogActions = Dialog.Actions;
+    DialogContent,
+    DialogActions
+} from '@codexporer.io/expo-dialog';
+import { Button, ButtonSize } from '@codexporer.io/expo-button';
+import { useAppTheme } from '@codexporer.io/expo-app-theme';
+import { Portal } from '@codexporer.io/expo-portal';
 
 export const useUnsavedChangesDialog = ({
     goBack,
@@ -19,8 +22,7 @@ export const useUnsavedChangesDialog = ({
     onContinueEditing = null,
     onDiscardChanges = null
 }) => {
-    di(Button, Dialog, DialogActions, DialogContent, Paragraph, Portal, useEffect, useState);
-
+    const theme = useAppTheme();
     const [isUnsavedChangesDialogVisible, setIsUnsavedChangesDialogVisible] = useState(false);
     const openUnsavedChangesDialogRef = useRef();
 
@@ -74,23 +76,23 @@ export const useUnsavedChangesDialog = ({
                 onDismiss={onContinueEditingClick}
             >
                 <DialogContent>
-                    <Paragraph>
+                    <Text style={[styles.message, { color: theme.text }]}>
                         Closing the screen will discard any unsaved changes.
                         {' '}
                         Do you want to continue and discard any unsaved changes?
-                    </Paragraph>
+                    </Text>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions style={styles.actions}>
                     <Button
+                        title='No'
+                        size={ButtonSize.Small}
                         onPress={onContinueEditingClick}
-                    >
-                        No
-                    </Button>
+                    />
                     <Button
+                        title='Yes'
+                        size={ButtonSize.Small}
                         onPress={onDiscardChangesClick}
-                    >
-                        Yes
-                    </Button>
+                    />
                 </DialogActions>
             </Dialog>
         </Portal>
@@ -101,3 +103,13 @@ export const useUnsavedChangesDialog = ({
         openUnsavedChangesDialog: openUnsavedChangesDialogRef.current
     };
 };
+
+const styles = StyleSheet.create({
+    actions: {
+        gap: 8
+    },
+    message: {
+        fontSize: 16,
+        lineHeight: 24
+    }
+});

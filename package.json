@@ -6,8 +6,10 @@
     "react": "*",
     "react-dom": "*",
     "react-native": "*",
-    "react-native-paper": "*",
-    "@codexporer.io/react-hooks": "*",
-    "@codexporer.io/react-test-utils": "*"
+    "@codexporer.io/expo-app-theme": "*",
+    "@codexporer.io/expo-dialog": "*",
+    "@codexporer.io/expo-button": "*",
+    "@codexporer.io/expo-portal": "*",
+    "@codexporer.io/react-hooks": "*"
   }
 }
