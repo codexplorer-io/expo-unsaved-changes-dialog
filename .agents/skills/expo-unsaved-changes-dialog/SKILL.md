@@ -6,7 +6,7 @@ description: Instructions and guidelines for using @codexporer.io/expo-unsaved-c
 # `@codexporer.io/expo-unsaved-changes-dialog` Skill
 
 ## Overview
-`@codexporer.io/expo-unsaved-changes-dialog` provides a confirmation modal hook preventing users from losing uncommitted edits when navigating away or pressing the Android hardware back button.
+`@codexporer.io/expo-unsaved-changes-dialog` provides a confirmation modal hook preventing users from losing uncommitted edits when navigating away or pressing the Android hardware back button. Features automatic keyboard dismissal, Android back press interception, and `<Portal>` mounting.
 
 ---
 
@@ -63,20 +63,22 @@ export function EditScreen() {
 
 | Option | Type | Required | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `goBack` | `() => void` | Yes | — | Navigation back callback |
-| `isFocused` | `boolean` | Yes | — | Focus status for Android back listener |
-| `hasUnsavedChanges` | `boolean` | Yes | — | Whether dirty edits exist |
-| `onDialogOpen` | `() => void` | No | `null` | Called when dialog appears |
-| `onContinueEditing` | `() => void` | No | `null` | Called when user chooses "No" |
-| `onDiscardChanges` | `() => void` | No | `null` | Called when user chooses "Yes" |
+| `goBack` | `() => void` | Yes | — | Navigation back callback executed when discard is confirmed or no changes exist |
+| `isFocused` | `boolean` | Yes | — | Screen focus status gating Android `hardwareBackPress` listener |
+| `hasUnsavedChanges` | `boolean` | Yes | — | Flag indicating whether uncommitted modifications exist |
+| `onDialogOpen` | `(() => void) \| null` | No | `null` | Optional callback fired when dialog opens |
+| `onContinueEditing` | `(() => void) \| null` | No | `null` | Optional callback when user taps "No" (continues editing) |
+| `onDiscardChanges` | `(() => void) \| null` | No | `null` | Optional callback when user taps "Yes" (discards changes) |
 
 #### Return Value
-- `renderUnsavedChangesDialog`: `() => ReactNode` (renders dialog inside Portal).
-- `openUnsavedChangesDialog`: `() => void` (checks `hasUnsavedChanges`; calls `goBack()` immediately if clean, opens modal if dirty).
+- `renderUnsavedChangesDialog`: `() => React.ReactNode` (renders dialog modal inside `<Portal>`).
+- `openUnsavedChangesDialog`: `() => void` (checks `hasUnsavedChanges`; calls `goBack()` immediately if false, dismisses keyboard and opens modal if true).
 
 ---
 
 ## Critical Rules & Guidelines
-1. **Always Connect Back Action**: Use `openUnsavedChangesDialog` for the header back button instead of raw `navigation.goBack()`.
+1. **Always Connect Back Action**: Use `openUnsavedChangesDialog` for header back buttons (e.g. `AppbarBackAction`) instead of raw `navigation.goBack()`.
 2. **Mount Render Function**: Always place `{renderUnsavedChangesDialog()}` in the JSX tree.
-3. **Guard with `isFocused`**: Pass `isFocused` so the hardware back listener only triggers when the screen is in the foreground.
+3. **Guard with `isFocused`**: Pass `isFocused` (e.g. from `useIsFocused()`) so the hardware back listener only triggers when the screen is in the foreground.
+4. **Keyboard Dismissal**: `Keyboard.dismiss()` is called automatically whenever the confirmation dialog is opened.
+5. **Theming**: Injects `theme.text` for the prompt text and inherits modal/button theming from `@codexporer.io/expo-dialog` and `@codexporer.io/expo-button`.
